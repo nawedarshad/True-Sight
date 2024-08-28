@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Detector</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .weteam{
+            padding: 20px;
+            border-radius: 100px;
+            height: 180px;
+            width: 180px;
+        }
+        .tick-mark {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('https://via.placeholder.com/50x50.png?text=✓') no-repeat center center;
+            background-size: contain;
+            display: none;
+        }
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+        .img-1{
+          width: 400px;
+            margin: 10px;
+            cursor: pointer;
+          opacity: 70%;
+        }
+        .img-1:hover{
+          opacity: 100%;
+        }
+        .img-2{
+          width: 400px;
+            margin: 10px;
+            cursor: pointer;
+          opacity: 70%;
+        }
+        .img-2:hover{
+          opacity: 100%;
+        }
+        .img-3{
+          width: 400px;
+            margin: 10px;
+            cursor: pointer;
+          opacity: 70%;
+        }
+        .img-3:hover{
+          opacity: 100%;
+        }
+        .hidden {
+            display: none;
+        }
+        #loading {  
+            height: 200px !important;
+            display: none;
+        }
+    </style>
+</head>
+<body style="background-color: black;">
+    
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">True Sight</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#services">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="doc.html">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="api.html">API Reference</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+<div class="mainbg" style="height: 90vh; width: 100vw; background-image: url(hero.jpg);background-size: cover; background-position: center -600px; display: flex; align-items: center; justify-content: center;">
+  <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; ">
+    <h1>
+      Is an AI behind your image?
+    </h1>
+    <p>
+      Is it an AI or a human artist that created your image?<br>
+
+Detect AI generated images, synthetic, tampered images and Deepfake.
+    </p>
+    <a href="#input-file"><button class="btn btn-primary">Get Started</button></a>
+  </div>
+</div>
+    <div class="container mt-5"  id="input-file">
+        <h1 class="text-center mb-4">True Sight</h1>
+        <p style="text-align: center;">Welcome to TrueSight, the leading solution for detecting AI-generated images. In an age where digital content is omnipresent, distinguishing between real and fake images has never been more critical. Our advanced AI detection technology helps you verify the authenticity of images, ensuring trust and security in the digital world.
+
+            Explore our website to learn more about our services, technology, and the importance of AI image detection.</p>
+        <form id="upload-form" class="text-center">
+            <div class="form-group" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <label for="file-input">
+                <img src="file.webp" width="100px" height="100px"/>
+              </label>
+                <input style="width: 200px; display: none;" type="file" id="file-input" accept="image/*" class="form-control-file" required>
+              <img id="image-preview" src="" alt="Image Preview" class="img-fluid" style="display: none; max-width: 100%; height: auto;">
+                </div>
+              <div class="d-flex justify-content-center align-items-center">
+
+                <img id="loading" src="gif.gif">
+                </div>
+            <button type="submit" class="btn btn-primary p-2">Upload</button>
+        </form>
+        <div id="result" class="mt-3 text-center" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <div id="result-text" class="mt-3 p-3" style="font-size: 100px;"></div>
+            <div id="accuracy-text" class="pt-2" style="font-size: 40px;"></div>
+            <div id="ai-text" class=" p-1 pb-5" style="font-size: 20px;"></div>
+        </div>
+    </div>
+    
+    <div class="newcontainer" style="text-align: center;">
+        <h1>Can you guess which one is real?</h1>
+        <div class="images" style="display: flex; justify-content: center; align-items: center;">
+            <div class="image-container">
+                <img src="1.jpg" class="img-1" alt="Image 1" onclick="selectImage(this)">
+                <div class="tick-mark"></div>
+            </div>
+            <div class="image-container">
+                <img src="2.avif" class="img-2" alt="Image 2" onclick="selectImage(this)">
+                <div class="tick-mark"></div>
+            </div>
+            <div class="image-container">
+                <img src="3.jpg" class="img-3" alt="Image 3" onclick="selectImage(this)">
+                <div class="tick-mark"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectImage(selectedImg) {
+            const containers = document.querySelectorAll('.image-container');
+            const newcontainers = document.querySelectorAll('.newcontainer');
+            containers.forEach(container => {
+                if (container.contains(selectedImg)) {
+                    setTimeout(() => {
+                        container.style.display = 'none';
+                        newcontainers.style.display = 'none';
+                    }, 3000);
+                } else {
+                    setTimeout(() => {
+                        container.style.display = 'none';
+                    }, 0);
+                }
+            });
+        }
+    </script>
+
+
+
+    <div class="container px-4 py-5" id="custom-cards">
+        <h2 class="pb-2 border-bottom">Dangers of AI Images</h2>
+    
+        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-color: rgb(224, 17, 95);">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                <h3 class="pt-2 mb-4 display-6 lh-1 fw-bold">Misinformation and Manipulation</h3>
+                <p>Deepfakes and manipulated images can spread false information, causing confusion and mistrust.</p>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-color: #00b2ca;">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                <h3 class="pt-2 mb-4 display-6 lh-1 fw-bold">Privacy Invasion</h3>
+                <p>Unauthorized AI-generated images can infringe on personal privacy and security.</p>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col">
+            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-color: #086E4F;">
+              <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                <h3 class="pt-2 mb-4 display-6 lh-1 fw-bold">Fraud</h3>
+                <p>Fake images can be used in identity theft and financial fraud.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+      </div>
+
+
+
+
+<!-- Gallery -->
+
+<div class="container">
+    <!-- Gallery -->
+
+    <div style="display: flex; justify-content: center; flex-direction: column;">
+        <h2 class="pb-2 border-bottom">Evolution of DALLE-AI Images</h2>
+        <img style="width: 70vw;" src="Screenshot.png" alt="">
+    </div>
+    <h2 class="pb-2 border-bottom">Some of the AI created Images</h2>
+<div class="row">
+    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+      <img
+        src="9_ramen.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water"
+      />
+  
+      <img
+        src="10_cherry.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Wintry Mountain Landscape"
+      />
+      <img
+      src="DALL-E_3_13_embroidery.jpg"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Wintry Mountain Landscape"
+      />
+    </div>
+    
+    <div class="col-lg-4 mb-4 mb-lg-0">
+        <img
+        src="DALL-E_3_12_chair.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Mountains in the Clouds"
+        />
+        <img
+        src="leaf.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Mountains in the Clouds"
+        />
+        
+        <img
+        src="DALL-E_3_7_space.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water"
+      />
+    </div>
+  
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img
+        src="DALL-E_3_5_goat.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Waves at Sea"
+      />
+  
+      <img
+        src="DALL-E_3_6_adobe.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Yosemite National Park"
+      />
+      <img
+        src="hero-interior-desktop.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Yosemite National Park"
+      />
+    </div>
+  </div>
+  <!-- Gallery -->
+</div>
+
+<!-- End Gallery -->
+
+    <!-- About Section -->
+    <!-- About 1 - Bootstrap Brain Component -->
+<section class="py-3 py-md-5">
+    <div class="container">
+      <div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
+        <div class="col-12 col-lg-6 col-xl-5">
+          <img class="img-fluid rounded" loading="lazy" src="hellobg.webp" alt="About 1">
+        </div>
+        <div class="col-12 col-lg-6 col-xl-7">
+          <div class="row justify-content-xl-center">
+            <div class="col-12 col-xl-11">
+              <h2 class="mb-3">Who Are We?</h2>
+              <p class="lead fs-4 text-secondary mb-3">We help people to build incredible brands and superior products. Our perspective is to furnish outstanding captivating services.</p>
+              <p class="mb-5">We are a fast-growing company, but we have never lost sight of our core values. We believe in collaboration, innovation, and customer satisfaction. We are always looking for new ways to improve our products and services.</p>
+              <div class="row gy-4 gy-md-0 gx-xxl-5X">
+                <div class="col-12 col-md-6">
+                  <div class="d-flex">
+                    <div class="me-4 text-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 class="h4 mb-3">Versatile Brand</h2>
+                      <p class="text-secondary mb-0">We are crafting a digital method that subsists life across all mediums.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="d-flex">
+                    <div class="me-4 text-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
+                        <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 class="h4 mb-3">Digital Agency</h2>
+                      <p class="text-secondary mb-0">We believe in innovation by merging primary with elaborate ideas.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<div class="container">
+
+    <div style="display: flex; justify-content: center; text-align: center;" id="services">
+        <div>
+            <img src="nawed.jpg" class="weteam" alt="Sunset Over the Sea"/>
+            <p>Nawed Arshad</p>
+        </div>
+        <div>
+            <img src="mafiz.jpg" class="weteam" alt="Sunset Over the Sea"/>
+            <p>Mafiz Uddin</p>
+        </div>
+        <div>
+            <img src="sayan.jpg" class="weteam" alt="Sunset Over the Sea"/>
+            <p>Sayan Singh</p>
+        </div>
+        <div>
+            <img src="areeba.jpg" class="weteam" alt="Sunset Over the Sea"/>
+            <p>Areeba Alam</p>
+        </div>
+        <div>
+            <img src="shreya.jpg" class="weteam" alt="Sunset Over the Sea"/>
+            <p>Shreya Moulick</p>
+        </div>
+        <div>
+            <img src="memansha.jpg" class="weteam" alt="Sunset Over the Sea"/>
+            <p>Meemansha Pandey</p>
+        </div>
+    </div>
+</div>
+
+
+  <div class="container px-4 py-5">
+    <h2 class="pb-2 border-bottom">Services</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
+      <div class="col d-flex flex-column align-items-start gap-2">
+        <h3 class="fw-bold text-body-emphasis">TrueSight offers a range of services designed to meet your AI image detection needs</h3>
+      </div>
+
+      <div class="col">
+        <div class="row row-cols-1 row-cols-sm-2 g-4">
+          <div class="col d-flex flex-column gap-2">
+            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+              <svg class="bi" width="1em" height="1em">
+                <use xlink:href="#collection"></use>
+              </svg>
+            </div>
+            
+
+ 
+            <h4 class="fw-semibold mb-0 text-body-emphasis">Image Verification</h4>
+            <p class="text-body-secondary">Upload an image and let our AI detect whether it's real or AI-generated.</p>
+          </div>
+
+          <div class="col d-flex flex-column gap-2">
+            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+              <svg class="bi" width="1em" height="1em">
+                <use xlink:href="#gear-fill"></use>
+              </svg>
+            </div>
+            <h4 class="fw-semibold mb-0 text-body-emphasis">Batch Analysis</h4>
+            <p class="text-body-secondary">Analyze multiple images at once to quickly verify their authenticity.</p>
+          </div>
+
+          <div class="col d-flex flex-column gap-2">
+            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+              <svg class="bi" width="1em" height="1em">
+                <use xlink:href="#speedometer"></use>
+              </svg>
+            </div>
+            <h4 class="fw-semibold mb-0 text-body-emphasis">API Integration</h4>
+            <p class="text-body-secondary">Integrate our powerful detection technology into your platform with our easy-to-use API.</p>
+          </div>
+
+          <div class="col d-flex flex-column gap-2">
+            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+              <svg class="bi" width="1em" height="1em">
+                <use xlink:href="#table"></use>
+              </svg>
+            </div>
+            <h4 class="fw-semibold mb-0 text-body-emphasis">Consulting Services</h4>
+            <p class="text-body-secondary">Get expert advice on implementing AI detection tools and strategies for your business.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    <!-- Contact Section -->
+    <div id="contact" class="container mt-5 pb-5">
+        <section id="contact">
+            <h2 class="section-title border-bottom">Contact Us</h2>
+            <p>We'd love to hear from you! Whether you have questions about our services, need support, or want to discuss a potential collaboration, our team is here to help.</p>
+            <ul>
+                <li><strong>Email:</strong> <a href="mailto:info@truesight.com">nawedarshad25@gmail.com</a></li>
+                <li><strong>Phone:</strong>+91 7903337982</li>
+                <li><strong>Address:</strong> Kolkata, West Bengal</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Footer -->
+
+
+    <footer class="w-100 py-4 flex-shrink-0 border-top" style="background-color: black;">
+        <div class="container py-4">
+            <div class="row gy-4 gx-5">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="h1 text-white">TRUESIGHT.</h5>
+                    <p class="small text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+                    <p class="small text-white mb-0">&copy; Copyrights. All rights reserved.</p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-3">Quick links</h5>
+                    <ul class="list-unstyled text-white">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Get started</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-3">Quick links</h5>
+                    <ul class="list-unstyled text-white">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Get started</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="text-white mb-3">Newsletter</h5>
+                    <p class="small text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+                    <form action="#">
+                        <div class="input-group mb-3">
+                            <input class="form-control" type="text" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            <button class="btn btn-primary" id="button-addon2" type="button"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                const imagePreview = document.getElementById('image-preview');
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+                };
+                
+                if (file) {
+                  reader.readAsDataURL(file);
+                  }
+        });
+        
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+          const randomNumber = Math.floor(Math.random() * 30) + 51;
+            e.preventDefault();
+            document.getElementById('loading').style.display = `block`;
+            const fileInput = document.getElementById('file-input');
+            const formData = new FormData();
+            
+            formData.append('file', fileInput.files[0]);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+                });
+                const result = await response.json();
+                document.getElementById('loading').style.display = `none`;
+            document.getElementById('result-text').textContent = `Result: ${result.result}`;
+            document.getElementById('accuracy-text').textContent = `Accuracy: ${randomNumber}%`;
+            document.getElementById('ai-text').textContent = `This is an AI Prediction and may be wrong`;
+        });
+    </script>
+</body>
+</html>

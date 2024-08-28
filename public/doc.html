@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrueSight AI Image Detection Documentation</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-right: 1px solid #e7e7e7;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">TrueSight Documentation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#introduction">Introduction</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#algorithms">Algorithms</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#use-cases">Use Cases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#faq">FAQ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Sections</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#introduction">Introduction</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#algorithms">Algorithms</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#use-cases">Use Cases</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#faq">FAQ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <section id="introduction">
+            <h2 class="section-title">Introduction</h2>
+            <p>Welcome to the TrueSight AI Image Detection Documentation. This guide provides an overview of our AI image detection technology, algorithms, use cases, and integration instructions. TrueSight is designed to help you identify AI-generated images and ensure the authenticity of visual content.</p>
+        </section>
+
+        <section id="algorithms">
+            <h2 class="section-title">Algorithms</h2>
+            <h3>1. Image Preprocessing</h3>
+            <p>Image preprocessing involves resizing, normalization, and augmentation to prepare the input image for analysis.</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/220px-PNG_transparency_demonstration_1.png" alt="Resizing Example">
+            <p><strong>Steps:</strong></p>
+            <ul>
+                <li>Resizing: Resize the image to a fixed dimension (e.g., 224x224 pixels).</li>
+                <li>Normalization: Normalize pixel values to a range between 0 and 1.</li>
+                <li>Augmentation: Apply data augmentation techniques such as rotation, flipping, etc.</li>
+            </ul>
+
+            <h3>2. Feature Extraction</h3>
+            <p>The algorithm extracts relevant features from the preprocessed image using a convolutional neural network (CNN).</p>
+            <p><strong>Key Components:</strong></p>
+            <ul>
+                <li>Convolutional Layers: Apply filters to detect features such as edges and textures.</li>
+                <li>Pooling Layers: Reduce the spatial dimensions of the feature maps, retaining important information.</li>
+                <li>Fully Connected Layers: Combine the extracted features to form a final feature vector.</li>
+            </ul>
+
+            <h3>3. Classification</h3>
+            <p>The extracted features are fed into a classifier, typically a softmax layer, which outputs the probability that the input image is AI-generated or real.</p>
+            <p><strong>Steps:</strong></p>
+            <ul>
+                <li>Softmax Layer: Calculate the probability distribution over the two classes (AI-generated, real).</li>
+                <li>Thresholding: Use a predefined threshold to make the final classification.</li>
+            </ul>
+
+            <h3>4. Post-Processing and Output</h3>
+            <p>The final step involves post-processing the classification results to provide a user-friendly output.</p>
+            <p><strong>Steps:</strong></p>
+            <ul>
+                <li>Result Interpretation: Convert the classification probabilities into a human-readable format.</li>
+                <li>Visualization: Display the classification result alongside the input image for easy interpretation.</li>
+            </ul>
+        </section>
+
+        <section id="use-cases">
+            <h2 class="section-title">Use Cases</h2>
+            <p>TrueSight AI Image Detection can be applied in various scenarios to ensure the authenticity and integrity of visual content.</p>
+            <ul>
+                <li><strong>Media Verification:</strong> Verify images before publication to prevent the spread of misinformation.</li>
+                <li><strong>Social Media:</strong> Identify and remove fake profiles and manipulated images to protect users.</li>
+                <li><strong>Financial Institutions:</strong> Verify identification documents to prevent identity fraud.</li>
+                <li><strong>E-commerce:</strong> Ensure product images are genuine to build trust in online marketplaces.</li>
+                <li><strong>Legal and Forensic Analysis:</strong> Verify the authenticity of digital evidence to support legal investigations.</li>
+            </ul>
+        </section>
+
+        <section id="faq">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p>Here are some common questions about TrueSight AI Image Detection:</p>
+            <ul>
+                <li><strong>How does TrueSight detect AI-generated images?</strong> TrueSight uses advanced machine learning algorithms and convolutional neural networks (CNNs) to analyze images and detect subtle patterns indicative of AI generation.</li>
+                <li><strong>What types of images can TrueSight analyze?</strong> TrueSight can analyze various types of images, including JPEG, PNG, and BMP formats.</li>
+                <li><strong>How accurate is TrueSight in detecting AI-generated images?</strong> TrueSight is highly accurate, with detection rates exceeding 95% in controlled testing environments.</li>
+                <li><strong>Is there a limit to the number of images I can analyze?</strong> TrueSight offers different plans to suit various needs, each with different limits on the number of images that can be analyzed.</li>
+                <li><strong>How can I integrate TrueSight into my application?</strong> TrueSight provides a comprehensive API that allows for easy integration into your application.</li>
+            </ul>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Contact Us</h2>
+            <p>We'd love to hear from you! Whether you have questions about our services, need support, or want to discuss a potential collaboration, our team is here to help.</p>
+            <ul>
+                <li><strong>Email:</strong> <a href="mailto:info@truesight.com">nawedarshad25@gmail.com</a></li>
+                <li><strong>Phone:</strong>+91 7903337982</li>
+                <li><strong>Address:</strong> Kolkata, West Bengal</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 TrueSight. All rights reserved. | Privacy Policy | Terms of Service</p>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
