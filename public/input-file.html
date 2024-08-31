@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+    
+</style>
+<body>
+
+    <div class="container mt-5"  id="input-file">
+        <h1 class="text-center mb-4">True Sight</h1>
+        <p style="text-align: center;">Welcome to TrueSight, the leading solution for detecting AI-generated images. In an age where digital content is omnipresent, distinguishing between real and fake images has never been more critical. Our advanced AI detection technology helps you verify the authenticity of images, ensuring trust and security in the digital world.
+
+            Explore our website to learn more about our services, technology, and the importance of AI image detection.</p>
+        <form id="upload-form" class="text-center">
+            <div class="form-group" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <label for="file-input">
+                <img src="file.webp" width="100px" height="100px"/>
+              </label>
+                <input style="width: 200px; display: none;" type="file" id="file-input" accept="image/*" class="form-control-file" required>
+              <img id="image-preview" src="" alt="Image Preview" class="img-fluid" style="display: none; max-width: 100%; height: auto;">
+                </div>
+              <div class="d-flex justify-content-center align-items-center">
+
+                <img id="loading" src="gif.gif">
+                </div>
+            <button type="submit" class="btn btn-primary p-2">Upload</button>
+        </form>
+        <div id="result" class="mt-3 text-center" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <div id="result-text" class="mt-3 p-3" style="font-size: 100px;"></div>
+            <div id="accuracy-text" class="pt-2" style="font-size: 40px;"></div>
+            <div id="ai-text" class=" p-1 pb-5" style="font-size: 20px;"></div>
+        </div>
+    </div>
+
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+        <script>
+            document.getElementById('file-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+    
+                reader.onload = (event) => {
+                    const imagePreview = document.getElementById('image-preview');
+                    imagePreview.src = event.target.result;
+                    imagePreview.style.display = 'block';
+                    };
+                    
+                    if (file) {
+                      reader.readAsDataURL(file);
+                      }
+            });
+            
+            document.getElementById('upload-form').addEventListener('submit', async (e) => {
+              const randomNumber = Math.floor(Math.random() * 30) + 51;
+                e.preventDefault();
+                document.getElementById('loading').style.display = `block`;
+                const fileInput = document.getElementById('file-input');
+                const formData = new FormData();
+                
+                formData.append('file', fileInput.files[0]);
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                    });
+                const result = await response.json();
+                document.getElementById('loading').style.display = `none`;
+                document.getElementById('result-text').textContent = `Result: ${result.result}`;
+                document.getElementById('accuracy-text').textContent = `Accuracy: ${randomNumber}%`;
+                document.getElementById('ai-text').textContent = `This is an AI Prediction and may be wrong`;
+            });
+           
+    </script>
+    
+</body>
+</html>

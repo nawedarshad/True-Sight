@@ -1,6 +1,9 @@
 *{
+  overflow-x: hidden;
+    width: 100%;
     font-family: poppins;
     color: white;
+    
 }
 a {
     color: inherit;
@@ -24,6 +27,3 @@ a {
   footer {
     background: #212529;
   }
-input{
-    
-}
