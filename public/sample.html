@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Detector</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-image: url('your-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        #navbar {
+            width: 100%;
+            max-height: 100px;
+            padding-left: 0;
+            padding-right: 10px;
+            font-size: 26px;
+            font-family: 'Arial', sans-serif;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #171717;
+            transition: background-color 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .navbar {
+            padding-left: 0;
+        }
+        .navbar-brand {
+            color: #ffffff;
+            padding-left: 0;
+            margin-left: 0px;
+        }
+        #navbar-logo {
+            height: 40px;
+            width: auto;
+            margin-left: 10px;
+            object-fit: contain;
+            margin-right: 5px;
+        }
+        #navbar .navbar-nav .nav-link {
+            color: #ffffff;
+            font-size: 1.0rem;
+            align-items: center;
+            top: 5%;
+        }
+        #navbar .navbar-nav .nav-link:hover {
+            color: #ffffff;
+        }
+        #navbar .navbar-toggler {
+            width: 50px;
+            border: 1px solid #7413ac;
+        }
+        #navbar .nav-item.active .nav-link {
+            color: #ffffff;
+        }
+        .navbar-nav ul {
+            gap: 1rem;
+            list-style: none;
+        }
+        .navbar-nav ul li {
+            color: #fff;
+            margin: 0;
+        }
+        .solutions-subnav {
+            position: absolute;
+            top: 70px;
+            left: 80%;
+            transform: translateX(-50%);
+            background-color: #333333;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1001;
+        }
+        .solutions-subnav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .solutions-subnav ul li {
+            margin-bottom: 10px;
+        }
+        .solutions-subnav ul li:last-child {
+            margin-bottom: 0;
+        }
+        .solutions-subnav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .solutions-subnav ul li a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        .menu:before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            border-radius: 5px;
+            transform: scaleX(0);
+            transition: all .5s ease;
+            bottom: 0;
+            left: 0;
+        }
+        @media (max-width: 768px) {
+            #navbar .navbar-nav {
+                text-align: center;
+            }
+        }
+        .mainbg {
+            height: auto;
+            width: 100%;
+            background-color: #582451;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 80px;
+            padding: 0 50px;
+        }
+        .hero {
+            margin-top: 0;
+            padding-top: 20px;
+            width: 100%;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        .content-left {
+            width: 45%;
+            color: white;
+            text-align: left;
+            margin-left: 35px;
+        }
+        .content-left h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .content-left h2 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+        .content-right {
+            width: 65%;
+            position: relative;
+            display: flex;
+        }
+        .laptop-container {
+            position: relative;
+        }
+        .laptop-image {
+            width: 75vw;
+            height: auto;
+            right: 30%;
+        }
+        .laptop-video {
+            position: absolute;
+            top: 18%;
+            left: 33%;
+            bottom: 30%;
+            width: 80%;
+            height: 65%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .mobile-emulator {
+            position: absolute;
+            top: 20%;
+            left: 55%;
+            transform: rotate(-10deg) translateZ(30px);
+            transform-origin: top left;
+            z-index: 2;
+        }
+        .mobile-image {
+            width: 30%;
+            height: auto;
+        }
+        .mobile-video {
+            position: absolute;
+            top: 16%;
+            left: 18%;
+            width: 65%;
+            height: 65%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .desc {
+            font-size: larger;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            overflow-y: hidden;
+            color: white;
+        }
+        @media screen and (max-width: 768px) {
+            .hero {
+                flex-direction: column-reverse;
+                height: auto;
+                width: 90vw;
+                padding: 10px;
+                overflow: hidden;
+            }
+            .content-left, .content-right {
+                overflow: hidden;
+                width: 100%;
+                text-align: center;
+            }
+            .content-left h1, .content-left h2 {
+                font-size: 1.8rem;
+            }
+            .laptop-container {
+                overflow: hidden;
+                position: relative;
+            }
+            .laptop-image {
+                right: 20%;
+                max-width: 500px;
+            }
+            .laptop-video {
+                width: 50%;
+                height: 65%;
+                top: 20%;
+                left: 25%;
+            }
+        }
+        @media screen and (max-width: 480px) {
+            .content-left h1 {
+                font-size: 1.8rem;
+            }
+            .content-left h2 {
+                font-size: 1.2rem;
+            }
+            .laptop-image {
+                width: 800px;
+            }
+            .laptop-video {
+                width: 75%;
+                height: 66%;
+                top: 17%;
+                left: 38%;
+            }
+        }
+        .desc h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #17abe6;
+            overflow-y: hidden;
+        }
+        .desc p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 300;
+            max-width: 1500px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .desc .cta-button {
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+            background-color: #ff6b6b;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            text-transform: uppercase;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 6px 12px;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            max-width: 15%;
+            max-height: 10%;
+            overflow: hidden;
+        }
+        .desc .cta-button span {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        .desc .cta-button:hover {
+            background-color: #e63946;
+            transform: scale(1.05);
+        }
+        .desc .cta-button:active {
+            transform: scale(0.95);
+        }
+        .desc .cta-button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img id="navbar-logo" src="logo.png" alt="Logo">AI Image Detector
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Services</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Solutions
+                    </a>
+                    <div class="dropdown-menu solutions-subnav" aria-labelledby="navbarDropdown">
+                        <ul>
+                            <li><a href="#">Solution 1</a></li>
+                            <li><a href="#">Solution 2</a></li>
+                            <li><a href="#">Solution 3</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="mainbg">
+        <div class="hero">
+            <div class="content-left">
+                <h1>Your Title Here</h1>
+                <h2>Your subtitle or description here.</h2>
+                <a href="#" class="cta-button"><span>Get Started</span></a>
+            </div>
+            <div class="content-right">
+                <div class="laptop-container">
+                    <img src="your-laptop-image.jpg" class="laptop-image" alt="Laptop Image">
+                    <video src="your-video.mp4" class="laptop-video" autoplay muted loop></video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('#navbar');
+            const scrollHandler = () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            };
+            window.addEventListener('scroll', scrollHandler);
+            scrollHandler();
+        });
+    </script>
+</body>
+</html>

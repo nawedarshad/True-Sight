@@ -1,0 +1,273 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+.container {
+    width: 150%; /* Adjust this percentage as needed */
+    margin: 0 auto;
+}
+.header {
+    margin-top: 1px; /* Adjust this value as needed */
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 50px); /* Adjust the height accordingly */
+    background-image: url('image/bg1.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+.header h1 {
+    font-size: 4em;
+            margin: 0;
+            padding-left: 20px; /* Adjust the padding as needed */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            text-align: left;
+}
+.main-content {
+    display: flex;
+    padding: 20px 20px;
+    background-color: #f9f9f9;
+}
+ .right-content, .middle-content {
+    padding: 10px;
+    box-sizing: border-box;
+}
+.middle-content {
+    flex: 3;
+    padding-right: 20px;
+}
+.middle-content h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #333;
+}
+.middle-content p {
+    font-size: 1.2em;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 20px;
+}
+.right-content {
+    flex: 2;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    padding: 20px;
+}
+.right-content h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+.right-content textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+.right-content button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+.right-content button:hover {
+    background-color: #0056b3;
+}
+/* Navbar CSS */
+#navbar {
+    width: 100%; 
+    max-height: 100px;
+    padding-left: 0;
+    padding-right: 1rem;
+    font-size: 26px; 
+    font-family: 'Arial', sans-serif; 
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #171717;
+    transition: background-color 0.3s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.navbar {
+    padding-left: 0;
+}
+
+.navbar-brand {
+    color: #ffffff;
+    display: flex;
+    align-items:center;
+    padding-left: 0;
+    margin-left: 0px;
+}
+
+#navbar-logo {
+    height: 40px;
+    width: auto;
+    margin-left: 10px;
+    object-fit: contain;
+    margin-right: 5px;
+}
+
+.container,
+.container-fluid {
+    padding-left: 0;
+}
+
+#navbar .navbar-nav .nav-link {
+    color: #ffffff;
+    font-size: 1.0rem;
+    align-items: center;
+    top: 5%;
+}
+
+#navbar .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+
+#navbar .navbar-toggler {
+    width: 50px;
+    border: 1px solid #7413ac;
+}
+
+#navbar .nav-item.active .nav-link {
+    color: #ffffff;
+}
+
+.navbar-nav ul {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+}
+
+.navbar-nav ul li {
+    color: #fff;
+    display: grid;
+    place-content: center;
+    margin: 0;
+}
+
+/* Subnav styling */
+.subnav {
+    position: relative; /* This is important for the subnav content positioning */
+    float: left;
+    overflow: hidden;
+}
+
+.subnav .subnavbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+    cursor: pointer;
+}
+
+.navbar a:hover, .subnav:hover .subnavbtn {
+    color: #555;
+}
+
+.subnav-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    background-color: rgb(35, 17, 99);
+    width: 200px;
+    top: 100%;
+    z-index: 4000;
+    border-radius: 0 0 5px 5px; /* Add rounded corners to the bottom of the dropdown */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow for better visibility */
+}
+
+.subnav-content a {
+    float: left;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.subnav-content a:hover {
+    background-color: #eee;
+    color: black;
+}
+
+.subnav:hover .subnav-content {
+    display: block;
+}
+
+/* Ensure sub-menu is aligned properly */
+.sub-menu li {
+    text-align: left;
+}
+.navbar-nav ul li {
+    color: #fff;
+    display: grid;
+    place-content: center;
+    margin: 0;
+}
+
+/* Additional styles for the navbar */
+#navbar .navbar-nav .nav-link {
+    color: #ffffff;
+    font-size: 1rem;
+    align-items: center;
+}
+
+#navbar .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+
+#navbar .navbar-toggler {
+    width: 50px;
+    border: 1px solid #7413ac;
+}
+
+#navbar .nav-item.active .nav-link {
+    color: #ffffff;
+}
+
+.navbar.scrolled {
+    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker when scrolled */
+}
+.menu:before{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 5px;
+  transform: scaleX(0);
+  transition: all .5s ease;
+  bottom: 0;
+  left: 0;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    #navbar .navbar-nav {
+        text-align: center; /* Center align the links on small screens */
+    }
+}
