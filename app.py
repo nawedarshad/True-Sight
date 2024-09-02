@@ -56,6 +56,9 @@ def doc():
 @app.route('/game.html')
 def game():
     return render_template('game.html')
+@app.route('/moderation.html')
+def moderation():
+    return render_template('moderation.html')
 
 
 @app.route('/signature.html')

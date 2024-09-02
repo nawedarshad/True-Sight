@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepFake Detection Demo</title>
+    <link rel="stylesheet" href="stylesmode.css">
+</head>
+<style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+#navbar {
+    width: 100%; 
+    max-height: 100px;
+    padding-left: 0;
+    padding-right: 10px;
+    font-size: 26px; 
+    font-family: 'Arial', sans-serif; 
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #171717;
+    transition: background-color 0.3s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.navbar {
+    padding-left: 0;
+}
+
+.navbar-brand {
+    color: #ffffff;
+    /* display: flex; */
+    /* align-items: center; */
+    padding-left: 0;
+    margin-left: 0px;
+    font-family:monospace;
+}
+
+#navbar-logo {
+    height: 40px;
+    width: auto;
+    margin-left: 20px;
+    object-fit: contain;
+    margin-right: 5px;
+}
+
+#navbar .navbar-nav .nav-link {
+    color: #ffffff;
+    font-size: 1.0rem;
+    align-items: center;
+    top: 10%;
+}
+
+#navbar .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+
+#navbar .navbar-toggler {
+    width: 50px;
+    border: 1px solid #7413ac;
+}
+
+#navbar .nav-item.active .nav-link {
+    color: #ffffff;
+}
+
+.navbar-nav ul {
+    /* display: flex; */
+    gap: 1rem;
+    list-style: none;
+}
+
+.navbar-nav ul li {
+    color: #fff;
+    /* display: grid; */
+    /* place-content: center; */
+    margin: 0;
+}
+
+/* Sub-navigation menu styling */
+.solutions-subnav {
+    position: absolute;
+    top: 70px; /* Adjust according to your navbar height */
+    left: 80%;
+    transform: translateX(-50%);
+    background-color: #333333;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1001;
+}
+
+.solutions-subnav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.solutions-subnav ul li {
+    margin-bottom: 10px;
+}
+
+.solutions-subnav ul li:last-child {
+    margin-bottom: 0;
+}
+
+.solutions-subnav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.solutions-subnav ul li a:hover {
+    color: #ffffff;
+    /* text-decoration: underline; */
+}
+
+.navbar.scrolled {
+    background-color: rgba(0, 0, 0, 0.9); /* Slightly darker when scrolled */
+}
+.menu:before{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 5px;
+  transform: scaleX(0);
+  transition: all .5s ease;
+  bottom: 0;
+  left: 0;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    #navbar .navbar-nav {
+        text-align: center; /* Center align the links on small screens */
+    }
+}
+
+.menu:before{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 5px;
+  transform: scaleX(0);
+  transition: all .5s ease;
+  bottom: 0;
+  left: 0;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    #navbar .navbar-nav {
+        text-align: center; /* Center align the links on small screens */
+    }
+} 
+.menu:before{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 5px;
+  transform: scaleX(0);
+  transition: all .5s ease;
+  bottom: 0;
+  left: 0;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    #navbar .navbar-nav {
+        text-align: center; /* Center align the links on small screens */
+    }
+}
+ 
+
+/* Container for Upload and Result Sections */
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+    background-color: #fff;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Upload Section */
+.upload-section {
+    flex: 1 1 45%;
+    min-width: 300px;
+}
+
+.upload-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #007bff;
+}
+
+#upload-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.upload-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.upload-field input[type="file"] {
+    width: 100%;
+    padding: 8px;
+}
+
+#add-upload {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-upload:hover {
+    background-color: #218838;
+}
+
+#upload-form input[type="submit"] {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#upload-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Result Section */
+.result-section {
+    flex: 1 1 45%;
+    min-width: 300px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.result-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #28a745;
+}
+
+.result-item {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.result-item .score {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #ffc107;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.cta-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #138496;
+}
+
+/* Sample Section */
+.sample-section {
+    padding: 20px;
+    margin: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sample-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #6c757d;
+    text-align: center;
+}
+
+.sample-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.scroll-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-button:hover {
+    opacity: 1;
+}
+
+#scroll-left {
+    left: -20px;
+}
+
+#scroll-right {
+    right: -20px;
+}
+
+.sample-row {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0 60px; /* To accommodate scroll buttons */
+}
+
+.sample-item {
+    min-width: 150px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sample-item img,
+.sample-item video {
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    cursor: pointer;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sample-item p {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .upload-section,
+    .result-section {
+        width: 90%;
+    }
+
+    .sample-row {
+        padding: 0 50px;
+    }
+
+    .scroll-button {
+        display: none; /* Hide buttons on smaller screens if desired */
+    }
+}
+
+@media (max-width: 768px) {
+    .sample-row {
+        padding: 0 40px;
+    }
+
+    .sample-item {
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sample-row {
+        padding: 0 30px;
+    }
+
+    .sample-item {
+        min-width: 100px;
+    }
+
+    .upload-section h2,
+    .result-section h2,
+    .sample-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .upload-field label,
+    .result-item {
+        font-size: 1rem;
+    }
+
+    .cta-button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+</style>
+<body>
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2>Upload Image/Video</h2>
+            <form id="upload-form">
+                <div class="upload-fields">
+                    <div class="upload-field">
+                        <label for="upload-image">Upload Image:</label>
+                        <input type="file" id="upload-image" name="images[]" accept="image/*">
+                    </div>
+                    <div class="upload-field">
+                        <label for="upload-video">Upload Video:</label>
+                        <input type="file" id="upload-video" name="videos[]" accept="video/*">
+                    </div>
+                </div>
+                <button type="button" id="add-upload">Add More</button>
+                <input type="submit" value="Analyze">
+            </form>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section">
+            <h2>Analysis Result</h2>
+            <div class="result-item">
+                <strong>Adult Content:</strong>
+                <span class="score">85%</span>
+            </div>
+            <div class="result-item">
+                <strong>Inappropriate Content:</strong>
+                <span class="score">70%</span>
+            </div>
+            <div class="result-item">
+                <strong>Offensive Content:</strong>
+                <span class="score">15%</span>
+            </div>
+            <button class="cta-button">Sign Up for FREE</button>
+        </div>
+    </div>
+
+    <!-- Sample Section -->
+    <div class="sample-section"style="height:40%;">
+        <h2>Images and Videos for Demo</h2>
+        <div class="sample-controls">
+            <button id="scroll-left" class="scroll-button">&larr;</button>
+            <div class="sample-row" id="sample-row">
+                <div class="sample-item">
+                    <img src="https://images.unsplash.com/photo-1725267385461-cab515fc1bbe?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sample Image 1" width="5px" height="5px">
+                </div>
+                <div class="sample-item">
+                    <img src="https://images.unsplash.com/photo-1725109431763-36524de95bf9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sample Image 2">
+                </div>
+                
+                <div class="sample-item">
+                    <img src="https://images.unsplash.com/photo-1725109431802-d73f9fda6ba9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sample Image 2">
+                    
+                </div>
+                
+                <div class="sample-item">
+                    <img src="https://images.unsplash.com/photo-1541491263892-731bc0c6a2ae?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" ></img>
+                    
+                </div>
+                <div class="sample-item">
+                    <img src="https://images.unsplash.com/photo-1479156731157-e883d1bd10d0?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sample Image 2">
+                    
+                </div>
+                <div class="sample-item">
+                    <img src="https://images.unsplash.com/photo-1529092197000-059f939260c2?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" ></img>
+                    
+                </div>
+                <!-- Add more sample items as needed -->
+            </div>
+            <button id="scroll-right" class="scroll-button">&rarr;</button>
+        </div>
+    </div>
+
+    <script >
+        // Add more upload fields
+document.getElementById('add-upload').addEventListener('click', function() {
+    const uploadFields = document.querySelector('.upload-fields');
+    
+    const newUploadFieldImage = document.createElement('div');
+    newUploadFieldImage.classList.add('upload-field');
+    newUploadFieldImage.innerHTML = `
+        <label for="upload-image">Upload Image:</label>
+        <input type="file" name="images[]" accept="image/*">
+    `;
+
+    const newUploadFieldVideo = document.createElement('div');
+    newUploadFieldVideo.classList.add('upload-field');
+    newUploadFieldVideo.innerHTML = `
+        <label for="upload-video">Upload Video:</label>
+        <input type="file" name="videos[]" accept="video/*">
+    `;
+
+    uploadFields.appendChild(newUploadFieldImage);
+    uploadFields.appendChild(newUploadFieldVideo);
+});
+
+// Scroll functionality for sample section
+const sampleRow = document.getElementById('sample-row');
+const scrollLeft = document.getElementById('scroll-left');
+const scrollRight = document.getElementById('scroll-right');
+
+const scrollAmount = 150; // Adjust scroll amount as needed
+
+scrollLeft.addEventListener('click', () => {
+    sampleRow.scrollBy({
+        top: 0,
+        left: -scrollAmount,
+        behavior: 'smooth'
+    });
+});
+
+scrollRight.addEventListener('click', () => {
+    sampleRow.scrollBy({
+        top: 0,
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+});
+
+// Optional: Handle form submission (this is just a placeholder)
+document.getElementById('upload-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Upload functionality is not implemented yet.');
+});
+
+    </script>
+</body>
+</html>
