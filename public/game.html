@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Random Image Selector</title>
+    <style>
+        .navbar-custom {
+            background-color: #000; 
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #fff; 
+        }
+        .navbar-custom .nav-link:hover {
+            color: #ccc; 
+        }
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .image-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            
+        }
+        .image-row img {
+            width: 450px;
+            height:450px;
+            margin: 0 10px;
+            /* border: 2px solid #ddd; */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .image-row img.selected {
+            transform: scale(1.05);
+            border: 2px solid #ddd;
+            /* border-color: #5230e7; */
+        }
+        .submit-btn:hover {
+            background-color: #00cc00;
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img style="height:30px;" class="m-2" src="TRUE_1_new-final.png" alt="Logo" id="navbar-logo">TRUESIGHT
+        </a>
+        <button class="navbar-toggler"  type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="" id="solutionsToggle">Solutions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="awarness.html">Awarness</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="doc.html">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="api.html">API Reference</a>
+                </li>
+            </ul>
+        </div>
+      </nav> 
+    <h1>Can you guess the AI Generated Images?</h1>
+    <div class="image-row" id="imageRow">
+        <!-- Images will be loaded here by JavaScript -->
+    </div>
+    <button class="btn btn-primary m-3" id="submitBtn">Submit</button>
+
+    <script>
+        const images = [
+            'image (1).png ',
+            'image (2).png ',
+            'image (3).png ',
+            'image (4).png ',
+            'image (5).png ',
+            'image (6).png ',
+            'image (7).png ',
+            'image (8).png ',
+            'image (9).png ',
+            'image (10).png ',
+            'image (11).png ',
+            'image (12).png ',
+            'image (13).jpg ',
+            'image (14).jpg ',
+            'image (15).jpg ',
+            'image (16).jpg ',
+            'image (17).jpg ',
+            'image (18).jpg ',
+            'image (19).jpg ',
+            'image (20).jpg ',
+            'image (21).jpg ',
+            'image (22).jpg ',
+            'image (23).jpg ',
+        ];
+
+        function loadImages() {
+            const imageRow = document.getElementById('imageRow');
+            imageRow.innerHTML = '';
+
+            const selectedImages = [];
+            while (selectedImages.length < 3) {
+                const randomIndex = Math.floor(Math.random() * images.length);
+                const selectedImage = images[randomIndex];
+                if (!selectedImages.includes(selectedImage)) {
+                    selectedImages.push(selectedImage);
+                }
+            }
+
+            selectedImages.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = `images-test/${image}`;
+                imgElement.alt = image;
+                imgElement.addEventListener('click', () => {
+                    imgElement.classList.toggle('selected');
+                });
+                imageRow.appendChild(imgElement);
+            });
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            loadImages();
+        });
+
+        window.onload = loadImages;
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
