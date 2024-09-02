@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Signature App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Digital Signature Application</h1>
+
+        <div class="form-group">
+            <label for="data">Data:</label>
+            <textarea id="data" rows="4"></textarea>
+        </div>
+
+        <button class="btn" onclick="generateSignature()">Generate Signature</button>
+
+        <div class="form-group">
+            <label for="signature">Generated Signature:</label>
+            <textarea id="signature" rows="4" readonly></textarea>
+        </div>
+
+        <button class="btn" onclick="verifySignature()">Verify Signature</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function generateSignature() {
+            const data = document.getElementById('data').value;
+            const response = await fetch('/generate_signature', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data }),
+            });
+            const result = await response.json();
+            if (response.ok) {
+                document.getElementById('signature').value = result.signature;
+            } else {
+                alert(result.error || 'An error occurred');
+            }
+        }
+
+        async function verifySignature() {
+            const data = document.getElementById('data').value;
+            const signature = document.getElementById('signature').value;
+            const response = await fetch('/verify_signature', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data, signature }),
+            });
+            const result = await response.json();
+            document.getElementById('result').textContent = result.status || 'An error occurred';
+        }
+    </script>
+</body>
+</html>

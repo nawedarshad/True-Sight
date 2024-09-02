@@ -6,6 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')  # Use a non-GUI backend
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+import base64
 
 from io import BytesIO
 from base64 import b64encode
@@ -14,7 +18,9 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
-
+key = RSA.generate(2048)
+private_key = key.export_key()
+public_key = key.publickey().export_key()
 # Configuration for Flask session
 app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with a strong secret key
 app.config['SESSION_TYPE'] = 'filesystem'  # Store session data on the server-side filesystem
@@ -36,7 +42,52 @@ def index():
 @app.route('/input-file.html')
 def inputfile():
     return render_template('input-file.html')
+@app.route('/api.html')
+def api():
+    return render_template('api.html')
+@app.route('/awarness.html')
+def awarness():
+    return render_template('awarness.html')
 
+@app.route('/doc.html')
+def doc():
+    return render_template('doc.html')
+
+@app.route('/game.html')
+def game():
+    return render_template('game.html')
+
+
+@app.route('/signature.html')
+def signature():
+    return render_template('signature.html')
+
+@app.route('/generate_signature', methods=['POST'])
+def generate_signature():
+    data = request.json.get('data')
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    # Generate the signature
+    h = SHA256.new(data.encode())
+    signature = pkcs1_15.new(RSA.import_key(private_key)).sign(h)
+    return jsonify({'signature': base64.b64encode(signature).decode()})
+
+@app.route('/verify_signature', methods=['POST'])
+def verify_signature():
+    data = request.json.get('data')
+    signature = request.json.get('signature')
+
+    if not data or not signature:
+        return jsonify({'error': 'Data or signature missing'}), 400
+
+    try:
+        # Verify the signature
+        h = SHA256.new(data.encode())
+        pkcs1_15.new(RSA.import_key(public_key)).verify(h, base64.b64decode(signature))
+        return jsonify({'status': 'Signature is valid'})
+    except (ValueError, TypeError):
+        return jsonify({'status': 'Signature is invalid'})
 
 
 @app.route('/upload', methods=['POST'])

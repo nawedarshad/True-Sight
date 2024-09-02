@@ -57,7 +57,7 @@
         <a class="navbar-brand" href="#">
             <img style="height:30px;" class="m-2" src="TRUE_1_new-final.png" alt="Logo" id="navbar-logo">TRUESIGHT
         </a>
-        <button class="navbar-toggler"  type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -66,7 +66,7 @@
                     <a class="nav-link" href="" id="solutionsToggle">Solutions</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="awarness.html">Awarness</a>
+                    <a class="nav-link" href="awarness.html">Awareness</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="doc.html">Documentation</a>
@@ -76,7 +76,7 @@
                 </li>
             </ul>
         </div>
-      </nav> 
+    </nav> 
     <h1>Can you guess the AI Generated Images?</h1>
     <div class="image-row" id="imageRow">
         <!-- Images will be loaded here by JavaScript -->
@@ -84,30 +84,33 @@
     <button class="btn btn-primary m-3" id="submitBtn">Submit</button>
 
     <script>
+        // Pass the base URL of the static folder to JavaScript
+        const baseUrl = "{{ url_for('static', filename='') }}";
+
         const images = [
-            'image (1).png ',
-            'image (2).png ',
-            'image (3).png ',
-            'image (4).png ',
-            'image (5).png ',
-            'image (6).png ',
-            'image (7).png ',
-            'image (8).png ',
-            'image (9).png ',
-            'image (10).png ',
-            'image (11).png ',
-            'image (12).png ',
-            'image (13).jpg ',
-            'image (14).jpg ',
-            'image (15).jpg ',
-            'image (16).jpg ',
-            'image (17).jpg ',
-            'image (18).jpg ',
-            'image (19).jpg ',
-            'image (20).jpg ',
-            'image (21).jpg ',
-            'image (22).jpg ',
-            'image (23).jpg ',
+            'image (1).png',
+            'image (2).png',
+            'image (3).png',
+            'image (4).png',
+            'image (5).png',
+            'image (6).png',
+            'image (7).png',
+            'image (8).png',
+            'image (9).png',
+            'image (10).png',
+            'image (11).png',
+            'image (12).png',
+            'image (13).jpg',
+            'image (14).jpg',
+            'image (15).jpg',
+            'image (16).jpg',
+            'image (17).jpg',
+            'image (18).jpg',
+            'image (19).jpg',
+            'image (20).jpg',
+            'image (21).jpg',
+            'image (22).jpg',
+            'image (23).jpg',
         ];
 
         function loadImages() {
@@ -125,7 +128,7 @@
 
             selectedImages.forEach(image => {
                 const imgElement = document.createElement('img');
-                imgElement.src = `images-test/${image}`;
+                imgElement.src = `${baseUrl}images-test/${image}`;
                 imgElement.alt = image;
                 imgElement.addEventListener('click', () => {
                     imgElement.classList.toggle('selected');
