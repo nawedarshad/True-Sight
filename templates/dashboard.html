@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Analysis Dashboard</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    <style>
+        *{
+            font-family: poppins;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-direction: column;
+            overflow: hidden; /* Ensure the image does not overflow the container */
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            object-fit: contain; /* Ensures the entire image is visible, fitting within the container */
+        }
+        .analysis-info {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .analysis-info p {
+            margin: 5px 0;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Dashboard</h1>
+        <p style="color: red; font-size: 40px;"><strong>Result:</strong> {{ result }}</p>
+
+        {% if deepfake_frame_data %}
+        <div class="image-container">
+            <h2>Frame with Detected Deepfake:</h2>
+            <img src="data:image/png;base64,{{ deepfake_frame_data }}" alt="Deepfake Frame">
+        </div>
+        {% endif %}
+
+        <div class="image-container">
+            <h2>Confidence Scores Plot:</h2>
+            <img src="data:image/png;base64,{{ image_data }}" alt="Confidence Scores and Histogram">
+        </div>
+
+        <div class="analysis-info">
+            <h2>Additional Analysis:</h2>
+            <p><strong>Average Confidence Score:</strong> {{ confidence_scores | sum / confidence_scores | length }}</p>
+            <p><strong>Number of Frames Analyzed:</strong> {{ confidence_scores | length }}</p>
+            <!-- <p><strong>Histogram Mean (Sample Frame):</strong> {{ histograms[0] | sum / histograms[0] | length }}</p> -->
+            <p><strong>Max Confidence Score:</strong> {{ confidence_scores | max }}</p>
+            <p><strong>Min Confidence Score:</strong> {{ confidence_scores | min }}</p>
+        </div>
+
+        <a href="{{ url_for('index') }}">Go Back to Upload Page</a>
+    </div>
+</body>
+</html>
