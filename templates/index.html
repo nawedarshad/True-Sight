@@ -751,12 +751,12 @@
             <!-- <p>Whether you're a journalist, content creator, educator, or concerned individual, our application is designed to protect the integrity of information. By simply uploading your media, you can verify its authenticity and safeguard yourself and your audience from misleading content.</p> -->
         </div>
         <div class="content-right">
-            <!-- <div class="laptop-container" > -->
-                <!-- <img src="{{ url_for('static', filename='Laptop.svg') }}" alt="Laptop Screen" class="laptop-image"> -->
+            <div class="laptop-container">
+                <img src="{{ url_for('static', filename='Laptop.svg') }}" alt="Laptop Screen" class="laptop-image">
                 <video src="{{ url_for('static', filename='Untitled video - Made with Clipchamp.mp4') }}" class="laptop-video" autoplay loop muted></video>
-            <!-- </div> -->
-            
-        </div> 
+            </div>
+        </div>
+        
       </div>
   </div>
 </body>
@@ -813,7 +813,7 @@
     <div class="tools-container">
         <!-- Card 1 -->
         <div class="card" style="width: 18rem;height: 24rem;">
-            <video class="card-img-top" src="content-mode.mp4" alt="..." autoplay loop muted playsinline style="width: 100%; height: auto;">
+            <video class="card-img-top" src="{{ url_for('static', filename='content-mode.mp4') }}" alt="..." autoplay loop muted playsinline style="width: 100%; height: auto;">
                 Your browser does not support the video tag.
             </video>
             <div class="card-body">
@@ -824,7 +824,7 @@
           </div>
         <!-- Card 2 -->
         <div class="card" style="width: 18rem;height: 24rem;">
-            <video class="card-img-top" src="fakespot.mp4" alt="..." autoplay loop muted playsinline style="width: 100%; height: auto;">
+            <video class="card-img-top" src="{{ url_for('static', filename='fakespot.mp4') }}" alt="..." autoplay loop muted playsinline style="width: 100%; height: auto;">
                 Your browser does not support the video tag.
             </video>
             <div class="card-body">
@@ -835,7 +835,7 @@
           </div>
         <!-- Card 3 -->
         <div class="card" style="width: 18rem;height: 24rem;">
-            <video class="card-img-top" src="Digital-Signature.mp4" alt="..." autoplay loop muted playsinline style="width: 100%; height:auto;">
+            <video class="card-img-top" src="{{ url_for('static', filename='Digital-Signature.mp4') }}" alt="..." autoplay loop muted playsinline style="width: 100%; height:auto;">
                 Your browser does not support the video tag.
             </video>
             <div class="card-body">

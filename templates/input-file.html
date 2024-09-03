@@ -358,12 +358,64 @@
         height: 35px;
     }
   } 
- 
+  #upload-form {
+    background-color: #3e3e3e; /* Slightly lighter background for contrast */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Cloud icon styling */
+.cloud-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+/* File input styling */
+#upload-form input[type="file"] {
+    display: none; /* Hide the original file input */
+}
+
+/* Custom upload button styling */
+.custom-upload-button {
+    display: inline-block;
+    background-color: #3b82f6; /* Blue background */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.custom-upload-button:hover {
+    background-color: #2563eb; /* Darker blue on hover */
+}
+
+/* Text and tips styling */
+#upload-form .tips {
+    font-size: 12px;
+    color: #a3a3a3;
+    margin-top: 10px;
+}
+
+/* File details styling */
+#upload-form .file-details {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #a3a3a3;
+}
+
 </style>
 <!-- Navbar -->
 <nav id="navbar" class="navbar navbar-expand-lg">
   <a class="navbar-brand" href="index.html">
-      <img src="TRUE_1_new-final.png" alt="Logo" id="navbar-logo">TRUESIGHT
+      <img src="{{ url_for('static', filename='TRUE_1_new-final.png') }}"alt="Logo" id="navbar-logo">TRUESIGHT
   </a>
   <button class="navbar-toggler"  type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -395,15 +447,20 @@
  <!-- Main Content -->
 <div class="mainbg" style="height: 100vh;  background-color: #242424; background-size: cover; background-position: center ; display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
 <div class="hero" style="width: 100vw; height: 80vh;  background: linear-gradient(to right, #2b2f36, #2f2f2f, #2b2f36); border-radius: 20px; display: flex; align-items: center; justify-content: center; animation: float 4s ease-in-out infinite; margin: 0; padding: 0; overflow-y: hidden;">
-  <div class="icon">
-    <img src="folder_6455560.png" alt="Upload Icon">
-</div>  
-  <h1>Upload  video/photo/GIF</h1>
-  <p>Video: Max 10 minutes, 500 MB<br>Photo: Max 10 MB<br>GIF: Max 15 MB</p>
-  <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="media" accept="video/*,image/*" required>
-    <button type="submit">Upload and Check</button>
-</form>            
+    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+        <div class="icon">
+            <!-- Add a cloud icon here or use an image tag -->
+            <img src="{{ url_for('static', filename='folder_6455560.png') }}" alt="cloud" />
+        </div>
+        <h2>Upload original video/photo/GIF</h2>
+        <p class="file-details">Video: Max 10 minutes, 500 MB<br>Photo: Max 10 MB<br>GIF: Max 15 MB</p>
+        <div class="upload-container">
+            <input type="file" id="file-upload" name="media" accept="video/*,image/*" required>
+            <label for="file-upload" class="custom-upload-button">Upload File or Drag and drop files</label>
+            <button class="submit">Submit</button>
+        </div>
+        
+    </form>           
   
 </div>
 </div>
@@ -415,7 +472,7 @@
       <div class="steps">
           <div class="step " style="overflow: hidden;">
               <div class="icon">
-                  <img src="folder_6455560.png" alt="Upload Icon">
+                  <img src="{{ url_for('static', filename='folder_6455560.png') }}" alt="Upload Icon">
               </div>
               <div class="step-text">
                   <h4>Upload</h4>
@@ -424,7 +481,7 @@
           </div>
           <div class="step"style="overflow: hidden;">
               <div class="icon">
-                  <img src="video-player_10619706.png" alt="Upload Icon">
+                  <img src="{{ url_for('static', filename='video-player_10619706.png') }}" alt="Upload Icon">
               </div>
               <div class="step-text"style="overflow: hidden;">
                   <h4>Deep-fake Analysis</h4>
@@ -433,7 +490,7 @@
           </div>
           <div class="step"style="overflow: hidden;">
               <div class="icon">
-                  <img src="Download-icon_files/10023884.png" alt="Download Icon">
+                  <img src="{{ url_for('static', filename='Download-icon_files/10023884.png') }}" alt="Download Icon">
               </div>
               <div class="step-text">
                   <h4>Download</h4>
