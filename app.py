@@ -10,6 +10,8 @@ from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA256
 import base64
+import shutil
+import random
 
 from io import BytesIO
 from base64 import b64encode
@@ -27,6 +29,28 @@ app.config['SESSION_TYPE'] = 'filesystem'  # Store session data on the server-si
 app.config['SESSION_FILE_DIR'] = os.path.join(os.getcwd(), 'flask_session')
 os.makedirs(app.config['SESSION_FILE_DIR'], exist_ok=True)
 Session(app)
+fake_image_reasons = [
+    "Inconsistent lighting: The lighting or shadows on different parts of the image do not match, suggesting possible manipulation. Natural lighting sources cast shadows and illuminate objects consistently. Mismatched lighting or shadows can indicate tampering, such as adding or adjusting elements.",
+    
+    "Irregular facial features: Facial features may appear distorted or unnatural compared to the rest of the image. Issues like unusual proportions, asymmetry, or unnatural textures can signal that the image has been altered. For example, eyes or mouths might appear disproportionately sized or oddly shaped.",
+    
+    "Unnatural textures: The texture of the skin or objects in the image might look inconsistent or overly smooth. Manipulated images often exhibit unrealistic textures due to digital effects or editing tools, resulting in surfaces that do not match the natural appearance.",
+    
+    "Artifacts and distortions: Presence of unusual artifacts, blurriness, or distortion, especially around the edges of objects or faces. Editing processes can introduce artifacts like noise, compression marks, or irregularities that become apparent upon close inspection, such as blurry or uneven edges.",
+    
+    "Anomalies in reflections: Reflections or shadows do not align correctly with the objects or faces in the image. If reflections appear out of place or mismatch the object they represent, it could indicate that parts of the image have been altered or combined without proper attention to detail.",
+    
+    "Misaligned features: Features such as eyes, mouth, or ears may be misaligned or asymmetrical in a way that looks unnatural. Facial features should align with underlying bone structure and muscle movement. Misalignments can occur due to digital alterations or blending errors.",
+    
+    "Image compression issues: Evidence of excessive or unusual image compression artifacts that are not typical for the given context. Heavy editing or saving in lower quality formats can introduce artifacts like blurring or color banding, which may be inconsistent with the image's intended context.",
+    
+    "Source verification issues: The image source is not trustworthy or the origin of the image cannot be confirmed. Verification issues include a lack of metadata, unverifiable publication history, or suspicious URLs, which can indicate that the image might be manipulated or fabricated.",
+    
+    "Metadata inconsistencies: Metadata (such as timestamps or camera settings) that does not match the context of the image. Inconsistencies in metadata, such as mismatched creation dates or camera settings, can suggest that the image has been altered or edited.",
+    
+    "Deepfake detection model results: If a deepfake detection model or algorithm identifies the image as a potential fake. Advanced models analyze images for signs of manipulation, such as unusual facial movements or artifacts. A flag from such models can provide additional evidence of manipulation."
+]
+
 
 # Load the pre-trained face detection model
 net = cv2.dnn.readNetFromCaffe('DATA/haarcascades/deploy.prototxt.txt',
@@ -60,7 +84,6 @@ def game():
 def moderation():
     return render_template('moderation.html')
 
-
 @app.route('/signature.html')
 def signature():
     return render_template('signature.html')
@@ -92,7 +115,6 @@ def verify_signature():
     except (ValueError, TypeError):
         return jsonify({'status': 'Signature is invalid'})
 
-
 @app.route('/upload', methods=['POST'])
 def upload_media():
     if 'media' not in request.files:
@@ -120,7 +142,8 @@ def process_video(video_path):
     frame_histograms = []
     deepfake_frame = None  # To store the frame where deepfake is detected
 
-    THRESHOLD = 0.7  # Adjusted threshold
+    THRESHOLD = 0.9  # Adjusted threshold
+    video_frames = []  # Store frames for video playback
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -135,9 +158,19 @@ def process_video(video_path):
         confidence_scores.append(confidence_score)
         frame_histograms.append(histograms)
 
+        # Annotate the frame with the detection result
+        color = (0, 255, 0) if not deepfake_detected else (0, 0, 255)
+        video_frames.append(cv2.putText(frame, "Deepfake Detected" if deepfake_detected else "Real", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2))
+
         total_frames += 1
 
     cap.release()
+
+    # Save the video with annotations
+    output_video_path = os.path.join('outputs', 'output_video.mp4')
+    save_annotated_video(output_video_path, video_frames)
+
+    session['video_output_path'] = output_video_path
 
     return analyze_results(confidence_scores, frame_histograms, deepfake_frame)
 
@@ -155,7 +188,6 @@ def process_image(image_path):
     return analyze_results(confidence_scores, frame_histograms, deepfake_frame)
 
 def detect_deepfake_in_frame(frame, threshold):
-    # Prepare the frame for the face detection model
     blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
     net.setInput(blob)
     detections = net.forward()
@@ -170,20 +202,15 @@ def detect_deepfake_in_frame(frame, threshold):
             box = detections[0, 0, i, 3:7] * np.array([frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
             (startX, startY, endX, endY) = box.astype("int")
 
-            # Extract the face region of interest (ROI)
             face_roi = frame[startY:endY, startX:endX]
-
-            # Prepare the face ROI for deepfake detection
             face_roi_resized = cv2.resize(face_roi, (256, 256))
             face_roi_array = img_to_array(face_roi_resized)
             face_roi_array = np.expand_dims(face_roi_array, axis=0)
             face_roi_array = preprocess_input(face_roi_array)
 
-            # Perform deepfake detection on the face ROI
             prediction = deepfake_model.predict(face_roi_array)
             confidence_score = prediction[0][0]
 
-            # Collect histogram data for all 3 color channels
             hist_b = cv2.calcHist([frame], [0], None, [256], [0, 256])
             hist_g = cv2.calcHist([frame], [1], None, [256], [0, 256])
             hist_r = cv2.calcHist([frame], [2], None, [256], [0, 256])
@@ -191,11 +218,29 @@ def detect_deepfake_in_frame(frame, threshold):
 
             if confidence_score > threshold:
                 deepfake_detected = True
-
-                # Draw a red rectangle around the detected face
                 cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 0, 255), 2)
+            else:
+                cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
 
     return deepfake_detected, confidence_score, histograms
+
+
+
+def save_annotated_video(output_path, frames):
+    height, width, layers = frames[0].shape
+    video = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'), 20, (width, height))
+
+    for frame in frames:
+        video.write(frame)
+
+    video.release()
+
+    # Move video to static folder for access
+    static_video_path = os.path.join('static', 'outputs', os.path.basename(output_path))
+    shutil.move(output_path, static_video_path)
+
+    return static_video_path
+
 
 def analyze_results(confidence_scores, frame_histograms, deepfake_frame):
     # Analyze the distribution of confidence scores
@@ -219,6 +264,7 @@ def analyze_results(confidence_scores, frame_histograms, deepfake_frame):
 @app.route('/dashboard')
 def dashboard():
     analysis_data = session.get('analysis_data')  # Retrieve analysis data from the session
+    video_output_path = session.get('video_output_path')  # Retrieve the video path
 
     if analysis_data is None:
         return jsonify({'error': 'Analysis data not found'}), 404
@@ -229,22 +275,33 @@ def dashboard():
     deepfake_frame = analysis_data['deepfake_frame']
 
     # Generate plots for confidence scores and histograms
-    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+    fig, ax = plt.subplots(2, 2, figsize=(14, 10))  # Adjusted the figure size
 
     # Plot confidence scores
-    ax[0].plot(confidence_scores, color='blue')
-    ax[0].set_title('Confidence Scores Over Frames')
-    ax[0].set_xlabel('Frame')
-    ax[0].set_ylabel('Confidence Score')
+    ax[0, 0].plot(confidence_scores, color='blue')
+    ax[0, 0].set_title('Confidence Scores Over Frames')
+    ax[0, 0].set_xlabel('Frame')
+    ax[0, 0].set_ylabel('Confidence Score')
 
-    # Plot histogram of a sample frame for all 3 channels
-    ax[1].plot(histograms[0][0], color='blue', label='Blue')
-    ax[1].plot(histograms[0][1], color='green', label='Green')
-    ax[1].plot(histograms[0][2], color='red', label='Red')
-    ax[1].set_xlabel('Pixel Value')
-    ax[1].set_ylabel('Frequency')
-    ax[1].legend()
+    # Plot combined histogram of all frames for each channel
+    combined_histograms = [np.mean([h[i] for h in histograms], axis=0) for i in range(3)]
+    ax[0, 1].plot(combined_histograms[0], color='blue', label='Blue')
+    ax[0, 1].plot(combined_histograms[1], color='green', label='Green')
+    ax[0, 1].plot(combined_histograms[2], color='red', label='Red')
+    ax[0, 1].set_title('Combined Histogram of All Frames')
+    ax[0, 1].set_xlabel('Pixel Value')
+    ax[0, 1].set_ylabel('Frequency')
+    ax[0, 1].legend()
 
+    # Show the output video path if available
+    if video_output_path:
+        ax[1, 0].text(0.5, 0.5, f'Video Output Path:\n{video_output_path}', 
+                      horizontalalignment='center', verticalalignment='center', fontsize=10, color='white')
+        ax[1, 0].axis('off')
+    else:
+        ax[1, 0].axis('off')  # Hide the axis if no video path is available
+
+    plt.tight_layout()
     png_image = BytesIO()
     plt.savefig(png_image, format='png')
     png_image.seek(0)
@@ -257,11 +314,17 @@ def dashboard():
     else:
         deepfake_frame_base64 = None
 
+    # Get a random explanation from the list
+    random_explanation = random.choice(fake_image_reasons)
+
     return render_template('dashboard.html', image_data=png_image_base64,
                            deepfake_frame_data=deepfake_frame_base64,
+                           video_path=video_output_path,
                            result='Deepfake Detected' if deepfake_detected else 'Real Video',
                            confidence_scores=confidence_scores,
-                           histograms=histograms)
+                           histograms=combined_histograms,
+                           explanation=random_explanation)
+
 
 if __name__ == '__main__':
     os.makedirs('uploads', exist_ok=True)
