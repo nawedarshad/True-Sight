@@ -275,31 +275,23 @@ def dashboard():
     deepfake_frame = analysis_data['deepfake_frame']
 
     # Generate plots for confidence scores and histograms
-    fig, ax = plt.subplots(2, 2, figsize=(14, 10))  # Adjusted the figure size
+    fig, ax = plt.subplots(2, 1, figsize=(14, 10))  # Adjusted to only have 2 rows
 
     # Plot confidence scores
-    ax[0, 0].plot(confidence_scores, color='blue')
-    ax[0, 0].set_title('Confidence Scores Over Frames')
-    ax[0, 0].set_xlabel('Frame')
-    ax[0, 0].set_ylabel('Confidence Score')
+    ax[0].plot(confidence_scores, color='blue')
+    ax[0].set_title('Confidence Scores Over Frames')
+    ax[0].set_xlabel('Frame')
+    ax[0].set_ylabel('Confidence Score')
 
     # Plot combined histogram of all frames for each channel
     combined_histograms = [np.mean([h[i] for h in histograms], axis=0) for i in range(3)]
-    ax[0, 1].plot(combined_histograms[0], color='blue', label='Blue')
-    ax[0, 1].plot(combined_histograms[1], color='green', label='Green')
-    ax[0, 1].plot(combined_histograms[2], color='red', label='Red')
-    ax[0, 1].set_title('Combined Histogram of All Frames')
-    ax[0, 1].set_xlabel('Pixel Value')
-    ax[0, 1].set_ylabel('Frequency')
-    ax[0, 1].legend()
-
-    # Show the output video path if available
-    if video_output_path:
-        ax[1, 0].text(0.5, 0.5, f'Video Output Path:\n{video_output_path}', 
-                      horizontalalignment='center', verticalalignment='center', fontsize=10, color='white')
-        ax[1, 0].axis('off')
-    else:
-        ax[1, 0].axis('off')  # Hide the axis if no video path is available
+    ax[1].plot(combined_histograms[0], color='blue', label='Blue')
+    ax[1].plot(combined_histograms[1], color='green', label='Green')
+    ax[1].plot(combined_histograms[2], color='red', label='Red')
+    ax[1].set_title('Combined Histogram of All Frames')
+    ax[1].set_xlabel('Pixel Value')
+    ax[1].set_ylabel('Frequency')
+    ax[1].legend()
 
     plt.tight_layout()
     png_image = BytesIO()
@@ -316,6 +308,14 @@ def dashboard():
 
     # Get a random explanation from the list
     random_explanation = random.choice(fake_image_reasons)
+
+    return render_template('dashboard.html', image_data=png_image_base64,
+                           deepfake_frame_data=deepfake_frame_base64,
+                           video_path=video_output_path,
+                           result='Deepfake Detected' if deepfake_detected else 'Real Video',
+                           confidence_scores=confidence_scores,
+                           histograms=combined_histograms,
+                           explanation=random_explanation)
 
     return render_template('dashboard.html', image_data=png_image_base64,
                            deepfake_frame_data=deepfake_frame_base64,
